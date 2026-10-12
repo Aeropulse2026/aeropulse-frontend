@@ -1,15 +1,40 @@
+@config "../../tailwind.config.ts";
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
+.skewed-carousel-stage { --card-step: clamp(205px, 28vw, 300px); position: relative; height: clamp(330px, 42vw, 410px); overflow: hidden; cursor: grab; touch-action: pan-y; outline: none; }
+.skewed-carousel-stage:active { cursor: grabbing; }
+.skewed-carousel-stage:focus-visible { border-radius: 1rem; box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-brand-secondary), transparent 65%); }
+.skewed-carousel-card { position: absolute; inset: 0 auto 0 50%; width: clamp(280px, 36vw, 390px); cursor: grab; touch-action: pan-y; will-change: transform; }
+.skewed-carousel-card:active { cursor: grabbing; }
+.skewed-carousel-card-inner { position: relative; height: 100%; overflow: hidden; clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); border-radius: 1.15rem; box-shadow: 18px 22px 36px -22px rgba(11, 31, 51, .55); }
+.skewed-carousel-card-inner::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(125deg, transparent 0 28px, rgba(255,255,255,.045) 29px 30px); mix-blend-mode: screen; }
+@media (max-width: 768px) { .skewed-carousel-stage { --card-step: 218px; height: 360px; } .skewed-carousel-card { width: min(82vw, 340px); } }
+@media (prefers-reduced-motion: reduce) { .skewed-carousel-card { transition-duration: 1ms; } }
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-work-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-work-sans);
+  --color-brand-primary: #123d69;
+  --color-brand-primary-foreground: #ffffff;
+  --color-brand-primary-hover: #173d69;
+  --color-brand-primary-dark: #0b1f33;
+  --color-brand-secondary: #167c96;
+  --color-brand-secondary-foreground: #ffffff;
+  --color-brand-secondary-light: #d9f3f7;
+  --color-brand-secondary-hover: #0f5d71;
+  --color-brand-accent: #f4b942;
+  --color-brand-background: #f5f7fa;
+  --color-brand-muted: #64748b;
+  --color-brand-border: #d9e2ec;
+  --color-brand-success: #34d399;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

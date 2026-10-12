@@ -1,0 +1,31 @@
+.card-nav-container { width: min(100%, 980px); margin: 14px auto; padding: 0 24px; position: relative; z-index: 50; }
+.card-nav { height: 60px; position: relative; overflow: hidden; border: 1px solid var(--color-brand-border); border-radius: 14px; box-shadow: 0 10px 28px -18px rgba(11,31,51,.35); will-change: height; }
+.card-nav-top { position: absolute; inset: 0 0 auto; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; z-index: 2; }
+.card-nav-command { display: flex; align-items: center; gap: 12px; }
+.hamburger-menu { width: 30px; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 6px; border: 0; padding: 0; background: transparent; cursor: pointer; }
+.hamburger-line { width: 24px; height: 2px; display: block; background: currentColor; transition: transform .25s ease; }
+.hamburger-menu.open .hamburger-line:first-child { transform: translateY(4px) rotate(45deg); }
+.hamburger-menu.open .hamburger-line:last-child { transform: translateY(-4px) rotate(-45deg); }
+.card-nav-command-label { display: flex; align-items: center; gap: 6px; color: #64748b; font-size: 10px; font-weight: 800; letter-spacing: .18em; }
+.logo-container { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; }
+.logo { width: 132px; height: auto; }
+.card-nav-cta-button { display: flex; align-items: center; height: 100%; padding: 0 16px; border-radius: 9px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.card-nav-content { position: absolute; inset: 60px 0 0; display: flex; align-items: stretch; gap: 12px; padding: 8px; visibility: hidden; pointer-events: none; }
+.card-nav.open .card-nav-content { visibility: visible; pointer-events: auto; }
+.nav-card { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; padding: 16px; border-radius: 10px; }
+.nav-card-mark { display: flex; align-items: center; gap: 6px; font-size: 9px; font-weight: 800; letter-spacing: .18em; opacity: .65; }
+.nav-card-label { font-size: 21px; font-weight: 600; letter-spacing: -.03em; }
+.nav-card-links { display: flex; flex-direction: column; gap: 7px; margin-top: auto; }
+.nav-card-link { display: inline-flex; align-items: center; gap: 6px; width: fit-content; font-size: 13px; text-decoration: none; opacity: .8; transition: opacity .2s ease, transform .2s ease; }
+.nav-card-link:hover { opacity: 1; transform: translateX(3px); }
+@media (max-width: 768px) {
+  .card-nav-container { width: 100%; margin: 10px auto; padding: 0 16px; }
+  .logo-container { position: static; transform: none; margin-left: 10px; }
+  .card-nav-top { justify-content: space-between; }
+  .card-nav-command { order: 2; }
+  .logo-container { order: 1; }
+  .card-nav-cta-button { display: none; }
+  .card-nav-content { flex-direction: column; gap: 8px; }
+  .nav-card { flex: 1 1 auto; min-height: 88px; }
+  .nav-card-label { font-size: 18px; }
+}
