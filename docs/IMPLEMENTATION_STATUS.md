@@ -43,6 +43,7 @@ The ML outputs are advisory. The existing project brief says current ML artifact
 
 ## Dashboard and fleet preview upgrade
 
+- The app has three isolated route modules: `/login`, `/headquarter/*`, and `/squadron/*`. HQ and Squadron Leader each render their own navigation and session controls. A role mismatch returns to Login; module detail links require an explicit module-local destination.
 - Headquarters `/headquarter` now displays a locally bundled, simplified DataMeet India Survey of India boundary (CC BY 4.0), selectable command/base markers, and a location detail panel. Marker positions and all unit statistics are illustrative. The boundary is for geographic illustration, not operational navigation; source caveats and attribution are displayed with the map.
 - Headquarters `/headquarter/fleet` and Squadron Leader `/squadron/fleet` use the shared `SkewedCardCarousel` and `FleetBrowser`. Search, status filters, previous/next buttons, keyboard arrows, pointer/touch swipes, and aircraft detail links are implemented. The aircraft visual is a stylized SVG icon/diagram because no authorized aircraft image assets were supplied.
 - Headquarters `/headquarter/squadrons` shows ten synthetic squadrons, assigned/operational aircraft, personnel strength, readiness, role, base, and maintenance counts. Its recommendation panel uses disclosed rule weights and is not an AI service or operational tasking decision.

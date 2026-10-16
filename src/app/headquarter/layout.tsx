@@ -42,10 +42,7 @@ export default function HeadquarterLayout({ children }: { children: React.ReactN
           },
         ]}
       />
-      <div className="mx-auto my-3 flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-        <p className="text-xs font-medium text-amber-800">DEMO PREVIEW · sample data, no operational connection</p>
-        <DemoSessionActions role="Headquarters" />
-      </div>
+      
       {children}
     </>
   );

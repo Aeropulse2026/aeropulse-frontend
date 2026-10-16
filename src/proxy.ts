@@ -19,9 +19,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (role !== requestedRole) {
-    return NextResponse.redirect(
-      new URL(role === "headquarters" ? "/headquarter" : "/squadron", request.url),
-    )
+    return NextResponse.redirect(loginUrl)
   }
 
   return NextResponse.next()

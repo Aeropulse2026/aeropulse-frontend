@@ -5,9 +5,9 @@ import Link from "next/link";
 import { AlertTriangle, ArrowUpRight, ChevronLeft, ChevronRight, Clock3, Plane, ShieldCheck, Wrench } from "lucide-react";
 import type { AircraftRecord } from "@/lib/demo-data/aircraft";
 
-type Props = { cards: AircraftRecord[]; ariaLabel?: string; detailPrefix?: string };
+type Props = { cards: AircraftRecord[]; ariaLabel?: string; detailPrefix: string };
 
-export function SkewedCardCarousel({ cards, ariaLabel = "Aircraft carousel", detailPrefix = "/headquarter/fleet" }: Props) {
+export function SkewedCardCarousel({ cards, ariaLabel = "Aircraft carousel", detailPrefix }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const startX = useRef<number | null>(null);
   const next = useCallback((delta: number) => setActiveIndex((i) => (i + delta + cards.length) % cards.length), [cards.length]);
