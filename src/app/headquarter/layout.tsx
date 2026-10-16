@@ -1,4 +1,5 @@
 import { CardNav } from "@/components/card-nav";
+import { DemoSessionActions } from "@/components/layout/demo-session-actions";
 
 export default function HeadquarterLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,7 +19,7 @@ export default function HeadquarterLayout({ children }: { children: React.ReactN
             textColor: "#ffffff",
             links: [
               { label: "Overview", href: "/headquarter", ariaLabel: "Headquarters overview" },
-              { label: "Operations", href: "/headquarter#missions", ariaLabel: "Mission operations" },
+              { label: "Squadron management", href: "/headquarter/squadrons", ariaLabel: "Squadron management" },
             ],
           },
           {
@@ -35,12 +36,16 @@ export default function HeadquarterLayout({ children }: { children: React.ReactN
             bgColor: "#fef3c7",
             textColor: "#451a03",
             links: [
-              { label: "Airbase assets", href: "/headquarter/assest", ariaLabel: "Airbase assets" },
-              { label: "Personnel records", href: "/headquarter#personnel", ariaLabel: "Personnel records" },
+              { label: "Airbase assets", href: "/headquarter/assets", ariaLabel: "Airbase assets" },
+              { label: "Fleet statistics", href: "/headquarter/stats", ariaLabel: "Fleet statistics" },
             ],
           },
         ]}
       />
+      <div className="mx-auto my-3 flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
+        <p className="text-xs font-medium text-amber-800">DEMO PREVIEW · sample data, no operational connection</p>
+        <DemoSessionActions role="Headquarters" />
+      </div>
       {children}
     </>
   );

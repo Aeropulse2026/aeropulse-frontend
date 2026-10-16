@@ -1,0 +1,17 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { Search } from "lucide-react";
+import { SkewedCardCarousel } from "@/components/skewed-card-carousel";
+import type { AircraftRecord } from "@/lib/demo-data/aircraft";
+
+export function FleetBrowser({ aircraft, title = "Fleet overview", eyebrow = "Headquarters / Fleet", detailPrefix = "/headquarter/fleet" }: { aircraft: AircraftRecord[]; title?: string; eyebrow?: string; detailPrefix?: string }) {
+  const [query,setQuery]=useState(""),[status,setStatus]=useState("All status");
+  const filtered=useMemo(()=>aircraft.filter(a=>(`${a.name} ${a.id} ${a.squadron} ${a.model}`.toLowerCase().includes(query.toLowerCase()))&&(status==="All status"||a.status===status)),[aircraft,query,status]);
+  const counts=[{label:"Operational",count:aircraft.filter(a=>a.status==="Operational").length,color:"text-emerald-700"},{label:"Maintenance",count:aircraft.filter(a=>a.status==="Maintenance").length,color:"text-rose-700"},{label:"Unavailable",count:aircraft.filter(a=>a.status==="Standby").length,color:"text-amber-700"}];
+  return <main className="min-h-screen bg-brand-background px-4 py-7 text-slate-950 sm:px-6 lg:px-12"><div className="mx-auto max-w-[1440px]"><header className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="mb-2 text-[11px] font-bold uppercase tracking-[.24em] text-brand-secondary">{eyebrow}</p><h1 className="text-3xl font-semibold tracking-tight text-brand-primary-dark sm:text-4xl">{title}</h1><p className="mt-2 text-sm text-brand-muted">Browse serviceability, maintenance windows, and sample fleet profiles.</p></div><span className="w-fit rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-900">Demo records · not live telemetry</span></header>
+  <div className="mb-5 grid gap-3 sm:grid-cols-3">{counts.map(x=><div key={x.label} className="rounded-2xl border border-brand-border bg-white px-5 py-4 shadow-sm"><p className="text-sm text-brand-muted">{x.label}</p><p className={`mt-1 text-3xl font-semibold ${x.color}`}>{x.count}<span className="ml-2 text-sm font-normal text-brand-muted">aircraft</span></p></div>)}</div>
+  <div className="mb-5 flex flex-col gap-3 sm:flex-row"><label className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-brand-border bg-white px-3 py-2.5"><Search className="size-4 text-brand-muted"/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search aircraft, ID, squadron…" className="w-full bg-transparent text-sm outline-none"/></label><select value={status} onChange={e=>setStatus(e.target.value)} aria-label="Filter aircraft by status" className="rounded-xl border border-brand-border bg-white px-4 py-2.5 text-sm"><option>All status</option><option>Operational</option><option>Maintenance</option><option>Standby</option></select></div>
+  {filtered.length?<SkewedCardCarousel cards={filtered} ariaLabel={`${title} carousel`} detailPrefix={detailPrefix}/>:<p className="rounded-2xl border border-brand-border bg-white p-10 text-center text-brand-muted">No aircraft match your search and status filter.</p>}
+  </div></main>;
+}

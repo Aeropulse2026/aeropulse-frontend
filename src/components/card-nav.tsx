@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ArrowUpRight, PlaneTakeoff, RadioTower, ShieldCheck } from "lucide-react";
 
@@ -85,7 +86,7 @@ export function CardNav({
             </button>
             <span className="card-nav-command-label"><RadioTower className="size-3.5" />AIR COMMAND</span>
           </div>
-          <div className="logo-container"><img src={logo} alt={logoAlt} className="logo" /></div>
+          <div className="logo-container"><Image src={logo} alt={logoAlt} width={160} height={40} className="logo" /></div>
           <span className="card-nav-cta-button" style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}>{buttonLabel}</span>
         </div>
         <div className="card-nav-content" aria-hidden={!isOpen}>

@@ -25,7 +25,7 @@ export default function NotFound() {
           <ArrowLeft className="size-4" />
           Return to base
         </Link>
-        <div className="mt-14 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] text-slate-400"><Radio className="size-3.5 text-brand-success" />Systems operational</div>
+        <div className="mt-14 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.16em] text-slate-400"><Radio className="size-3.5 text-amber-400" />Backend not connected · preview mode</div>
       </section>
     </main>
   );

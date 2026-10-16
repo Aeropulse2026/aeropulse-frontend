@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sign in | Aeropulse",
-  description: "Secure access to the Aeropulse command network.",
+  title: "AeroPulse | Command Network",
+  description: "AeroPulse aviation command interface.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
