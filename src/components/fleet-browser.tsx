@@ -1,17 +1,398 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Search,
+  SlidersHorizontal,
+  ChevronDown,
+  Check,
+  LayoutGrid,
+  Plane,
+  Wrench,
+  Clock3,
+} from "lucide-react";
+
 import { SkewedCardCarousel } from "@/components/skewed-card-carousel";
 import type { AircraftRecord } from "@/lib/demo-data/aircraft";
 
-export function FleetBrowser({ aircraft, title = "Fleet overview", eyebrow = "Headquarters / Fleet", detailPrefix, appearance = "standard" }: { aircraft: AircraftRecord[]; title?: string; eyebrow?: string; detailPrefix: string; appearance?: "standard" | "squadron" }) {
-  const [query,setQuery]=useState(""),[status,setStatus]=useState("All status");
-  const filtered=useMemo(()=>aircraft.filter(a=>(`${a.name} ${a.id} ${a.squadron} ${a.model}`.toLowerCase().includes(query.toLowerCase()))&&(status==="All status"||a.status===status)),[aircraft,query,status]);
-  const counts=[{label:"Operational",count:aircraft.filter(a=>a.status==="Operational").length,color:"text-emerald-700"},{label:"Maintenance",count:aircraft.filter(a=>a.status==="Maintenance").length,color:"text-amber-700"},{label:"Unavailable",count:aircraft.filter(a=>a.status==="Standby").length,color:"text-amber-700"}];
-  return <main className={`${appearance === "squadron" ? "squadron-fleet-page" : "bg-brand-background text-slate-950"} min-h-screen px-4 py-7 sm:px-6 lg:px-12`}><div className="mx-auto max-w-[1440px]"><header className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className={`${appearance === "squadron" ? "fleet-eyebrow" : "text-brand-secondary"} mb-2 text-[11px] font-bold uppercase tracking-[.24em]`}>{eyebrow}</p><h1 className={`${appearance === "squadron" ? "" : "text-brand-primary-dark"} text-3xl font-semibold tracking-tight sm:text-4xl`}>{title}</h1><p className={`${appearance === "squadron" ? "fleet-description" : "text-brand-muted"} mt-2 text-sm`}>Browse serviceability, maintenance windows, and sample fleet profiles.</p></div></header>
-  <div className="mb-5 grid gap-3 sm:grid-cols-3">{counts.map(x=><div key={x.label} className={`${appearance === "squadron" ? "fleet-stat-card rounded-2xl border px-5 py-4" : "hq-interactive-card rounded-2xl border border-brand-border bg-white px-5 py-4 shadow-sm"}`}><p className={`${appearance === "squadron" ? "fleet-stat-label" : "text-brand-muted"} text-sm`}>{x.label}</p><p className={`${appearance === "squadron" ? "fleet-stat-value" : ""} mt-1 text-3xl font-semibold ${x.color}`}>{x.count}<span className={`${appearance === "squadron" ? "fleet-stat-suffix" : "text-brand-muted"} ml-2 text-sm font-normal`}>aircraft</span></p></div>)}</div>
-  <div className="mb-5 flex flex-col gap-3 sm:flex-row"><label className={`fleet-search-control flex min-w-0 flex-1 items-center gap-2 rounded-xl border px-3 py-2.5 ${appearance === "squadron" ? "" : "border-brand-border bg-white"}`}><Search className={`size-4 ${appearance === "squadron" ? "fleet-search-icon" : "text-brand-muted"}`}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search aircraft, ID, squadron…" className="w-full bg-transparent text-sm outline-none"/></label><select value={status} onChange={e=>setStatus(e.target.value)} aria-label="Filter aircraft by status" className={`fleet-filter-select rounded-xl border px-4 py-2.5 text-sm ${appearance === "squadron" ? "" : "border-brand-border bg-white"}`}><option>All status</option><option>Operational</option><option>Maintenance</option><option>Standby</option></select></div>
-  {filtered.length?<SkewedCardCarousel cards={filtered} ariaLabel={`${title} carousel`} detailPrefix={detailPrefix} appearance={appearance}/>:<p className="rounded-2xl border border-brand-border bg-white p-10 text-center text-brand-muted">No aircraft match your search and status filter.</p>}
-  </div></main>;
+type FleetBrowserProps = {
+  aircraft: AircraftRecord[];
+  title?: string;
+  eyebrow?: string;
+  detailPrefix: string;
+  appearance?: "standard" | "squadron";
+};
+
+const statusOptions = [
+  { label: "All status", icon: LayoutGrid, color: "blue" },
+  { label: "Operational", icon: Plane, color: "green" },
+  { label: "Maintenance", icon: Wrench, color: "amber" },
+  { label: "Standby", icon: Clock3, color: "red" },
+] as const;
+
+const iconColors = {
+  blue: "bg-sky-50 text-sky-700",
+  green: "bg-emerald-50 text-emerald-700",
+  amber: "bg-amber-50 text-amber-600",
+  red: "bg-rose-50 text-rose-600",
+};
+
+export function FleetBrowser({
+  aircraft,
+  title = "Fleet overview",
+  eyebrow = "Headquarters / Fleet",
+  detailPrefix,
+  appearance = "standard",
+}: FleetBrowserProps) {
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState("All status");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const isSquadron = appearance === "squadron";
+
+  useEffect(() => {
+    function handleOutsideClick(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setDropdownOpen(false);
+    }
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  const counts = useMemo(
+    () => ({
+      "All status": aircraft.length,
+      Operational: aircraft.filter(
+        (a) => a.status === "Operational"
+      ).length,
+      Maintenance: aircraft.filter(
+        (a) => a.status === "Maintenance"
+      ).length,
+      Standby: aircraft.filter((a) => a.status === "Standby").length,
+    }),
+    [aircraft]
+  );
+
+  const filtered = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return aircraft.filter((a) => {
+      const searchableText =
+        `${a.name} ${a.id} ${a.squadron} ${a.model} ${a.status}`.toLowerCase();
+
+      const matchesQuery = searchableText.includes(normalizedQuery);
+      const matchesStatus =
+        status === "All status" || a.status === status;
+
+      return matchesQuery && matchesStatus;
+    });
+  }, [aircraft, query, status]);
+
+  const statistics = [
+    {
+      label: "Operational",
+      count: counts.Operational,
+      color: "text-emerald-700",
+    },
+    {
+      label: "Maintenance",
+      count: counts.Maintenance,
+      color: "text-amber-700",
+    },
+    {
+      label: "Unavailable",
+      count: counts.Standby,
+      color: "text-amber-700",
+    },
+  ];
+
+  return (
+    <main
+      className={`${isSquadron
+          ? "squadron-fleet-page"
+          : "bg-brand-background text-slate-950"
+        } min-h-screen px-4 py-7 sm:px-6 lg:px-12`}
+    >
+      <div className="mx-auto max-w-[1440px]">
+        {/* Page heading */}
+        <header className="mb-6">
+          <p
+            className={`${isSquadron
+                ? "fleet-eyebrow"
+                : "text-brand-secondary"
+              } mb-2 text-[11px] font-bold uppercase tracking-[.24em]`}
+          >
+            {eyebrow}
+          </p>
+
+          <h1
+            className={`${isSquadron ? "" : "text-brand-primary-dark"
+              } text-3xl font-semibold tracking-tight sm:text-4xl`}
+          >
+            {title}
+          </h1>
+
+          <p
+            className={`${isSquadron
+                ? "fleet-description"
+                : "text-brand-muted"
+              } mt-2 text-sm`}
+          >
+            Browse serviceability, maintenance windows, and sample fleet
+            profiles.
+          </p>
+        </header>
+
+        {/* Statistics */}
+        <div className="mb-6 grid gap-3 sm:grid-cols-3">
+          {statistics.map((item) => (
+            <div
+              key={item.label}
+              className={`${isSquadron
+                  ? "fleet-stat-card rounded-2xl border px-5 py-4"
+                  : "hq-interactive-card rounded-2xl border border-brand-border bg-white px-5 py-4 shadow-sm"
+                } transition-shadow duration-200 hover:shadow-md`}
+            >
+              <p
+                className={`${isSquadron
+                    ? "fleet-stat-label"
+                    : "text-brand-muted"
+                  } text-sm`}
+              >
+                {item.label}
+              </p>
+
+              <p
+                className={`${isSquadron ? "fleet-stat-value" : ""
+                  } mt-1 text-3xl font-semibold ${item.color}`}
+              >
+                {item.count}
+                <span
+                  className={`${isSquadron
+                      ? "fleet-stat-suffix"
+                      : "text-brand-muted"
+                    } ml-2 text-sm font-normal`}
+                >
+                  aircraft
+                </span>
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Search and status controls */}
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          {/* Search field: one border, no outer focus ring */}
+          <div
+            className={`flex h-[54px] min-w-0 flex-1 items-center gap-3 rounded-full border px-4 sm:px-5 transition-colors duration-200 ${isSquadron
+                ? "fleet-search-control"
+                : "border-slate-200 bg-white shadow-sm hover:border-slate-300"
+              }`}
+          >
+            <Search
+              aria-hidden="true"
+              className={`size-5 shrink-0 ${isSquadron
+                  ? "fleet-search-icon"
+                  : "text-sky-800"
+                }`}
+            />
+
+            <input
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search aircraft, ID, squadron..."
+              aria-label="Search aircraft"
+              className="!m-0 h-full w-full min-w-0 !border-0 !bg-transparent !p-0 text-sm text-slate-800 !outline-none !ring-0 !shadow-none placeholder:text-slate-400 focus:!border-0 focus:!outline-none focus:!ring-0 focus:!shadow-none sm:text-base"
+              style={{
+                outline: "none",
+                boxShadow: "none",
+                border: "none",
+              }}
+            />
+
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label="Clear search"
+                className="shrink-0 rounded-full px-2 py-1 text-xs text-slate-500 hover:bg-slate-100"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {/* Custom dropdown */}
+          <div
+            ref={dropdownRef}
+            className="relative z-50 w-full sm:w-[225px] sm:shrink-0"
+          >
+            <button
+              type="button"
+              aria-label="Filter aircraft status"
+              aria-haspopup="listbox"
+              aria-expanded={dropdownOpen}
+              onClick={() => setDropdownOpen((previous) => !previous)}
+              className={`flex h-[54px] w-full items-center justify-between gap-3 rounded-[22px] border px-5 transition-colors duration-200 ${isSquadron
+                  ? "fleet-filter-select"
+                  : "border-slate-200 bg-white text-slate-900 shadow-sm hover:border-slate-300"
+                } ${dropdownOpen
+                  ? "border-sky-300"
+                  : ""
+                }`}
+            >
+              <span className="flex min-w-0 items-center gap-3">
+                <SlidersHorizontal
+                  className="size-5 shrink-0 text-sky-800"
+                />
+                <span className="truncate text-sm font-semibold">
+                  {status}
+                </span>
+              </span>
+
+              <ChevronDown
+                className={`size-5 shrink-0 text-slate-700 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""
+                  }`}
+              />
+            </button>
+
+            {/* Floating menu */}
+            <div
+              role="listbox"
+              aria-label="Aircraft status options"
+              aria-hidden={!dropdownOpen}
+              className={`absolute left-0 right-0 top-[calc(100%+8px)] z-50 w-full min-w-0 origin-top rounded-[23px] border border-slate-100 bg-white p-2 shadow-[0_18px_48px_rgba(20,45,75,0.16)] transition-all duration-200 ${dropdownOpen
+                  ? "visible translate-y-0 scale-100 opacity-100"
+                  : "invisible -translate-y-2 scale-[0.98] opacity-0"
+                }`}
+            >
+              {statusOptions.map((option) => {
+                const Icon = option.icon;
+                const selected = status === option.label;
+                const count =
+                  counts[option.label as keyof typeof counts];
+
+                return (
+                  <button
+                    key={option.label}
+                    type="button"
+                    role="option"
+                    aria-selected={selected}
+                    tabIndex={dropdownOpen ? 0 : -1}
+                    onClick={() => {
+                      setStatus(option.label);
+                      setDropdownOpen(false);
+                    }}
+                    className={`flex min-h-[49px] w-full items-center gap-3 rounded-[15px] px-3 py-2 text-left transition-colors duration-150 ${selected
+                        ? "bg-sky-50"
+                        : "hover:bg-slate-50"
+                      }`}
+                  >
+                    <span
+                      className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${iconColors[option.color]}`}
+                    >
+                      <Icon
+                        className="size-[19px]"
+                        strokeWidth={2.2}
+                      />
+                    </span>
+
+                    <span className="min-w-0 flex-1 whitespace-nowrap text-sm font-medium text-slate-800">
+                      {option.label}
+                    </span>
+
+                    {option.label !== "All status" && (
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-slate-600">
+                        {String(count).padStart(2, "0")}
+                      </span>
+                    )}
+
+                    {selected && (
+                      <Check
+                        className="size-5 shrink-0 text-sky-600"
+                        strokeWidth={2.5}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Results summary */}
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <p
+            className={`text-sm ${isSquadron
+                ? "fleet-description"
+                : "text-brand-muted"
+              }`}
+          >
+            {status === "All status" ? "All aircraft" : status}
+          </p>
+
+          <p className="text-xs font-medium text-slate-500">
+            Showing{" "}
+            <span className="font-semibold text-slate-900">
+              {filtered.length}
+            </span>{" "}
+            of {aircraft.length} aircraft
+          </p>
+        </div>
+
+        {/* Existing carousel */}
+        {filtered.length > 0 ? (
+          <SkewedCardCarousel
+            cards={filtered}
+            ariaLabel={`${title} carousel`}
+            detailPrefix={detailPrefix}
+            appearance={appearance}
+          />
+        ) : (
+          <div className="flex min-h-56 flex-col items-center justify-center rounded-3xl border border-dashed border-brand-border bg-white px-5 py-12 text-center">
+            <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-slate-100">
+              <Search className="size-6 text-slate-400" />
+            </div>
+
+            <h2 className="text-lg font-semibold text-slate-800">
+              No aircraft found
+            </h2>
+
+            <p className="mt-2 max-w-sm text-sm text-brand-muted">
+              No aircraft match your search and status filter.
+              Try a different search term or status.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setStatus("All status");
+                setDropdownOpen(false);
+              }}
+              className="mt-5 rounded-full bg-brand-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-primary-hover"
+            >
+              Reset filters
+            </button>
+          </div>
+        )}
+      </div>
+    </main>
+  );
 }
