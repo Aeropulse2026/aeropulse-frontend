@@ -35,12 +35,12 @@ export default function LoginPage() {
       });
       if (!response.ok) {
         const result = (await response.json()) as { error?: string };
-        throw new Error(result.error ?? "Could not start the demo preview.");
+        throw new Error(result.error ?? "Could not start the preview.");
       }
       router.replace(role === "headquarters" ? "/headquarter" : "/squadron");
       router.refresh();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Could not start the demo preview.");
+      setError(cause instanceof Error ? cause.message : "Could not start the preview.");
     } finally {
       setBusy(false);
     }
@@ -74,10 +74,9 @@ export default function LoginPage() {
                 <div className="space-y-2"><div className="flex items-center justify-between"><Label htmlFor="password" className="text-slate-700">Password</Label><button type="button" onClick={() => setError("Password recovery is not available until the authentication backend is connected.")} className="text-xs font-semibold text-brand-secondary transition-colors hover:text-brand-secondary-hover">Forgot password?</button></div><div className="relative"><LockKeyhole className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" /><Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder="Enter your password" autoComplete="current-password" required className="h-11 rounded-xl border-slate-200 pl-10 pr-11 shadow-none" /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((visible) => !visible)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-brand-secondary">{showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}</button></div></div>
               </>}
               <div className="space-y-3"><Label className="text-slate-700">Role</Label><RadioGroup value={role} onValueChange={setRole} className="grid grid-cols-2 gap-3"><label className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-colors ${role === "squadron-leader" ? "border-brand-secondary bg-brand-secondary-light" : "border-slate-200 hover:bg-slate-50"}`}><RadioGroupItem value="squadron-leader" aria-label="Squadron leader" /><span className="text-sm font-medium leading-5 text-slate-700">Squadron leader</span></label><label className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-colors ${role === "headquarters" ? "border-brand-secondary bg-brand-secondary-light" : "border-slate-200 hover:bg-slate-50"}`}><RadioGroupItem value="headquarters" aria-label="Headquarters" /><span className="text-sm font-medium leading-5 text-slate-700">Headquarters</span></label></RadioGroup></div>
-              <Button type="submit" disabled={busy} className="h-11 w-full rounded-xl !bg-brand-primary-dark text-sm font-semibold !text-white shadow-lg shadow-brand-primary-dark/15 transition-all hover:!bg-brand-primary-hover">{busy ? "Opening preview…" : DEMO_MODE_ENABLED ? "Enter demo preview" : "Sign in"}<ArrowRight className="ml-1 size-4" /></Button>
+              <Button type="submit" disabled={busy} className="h-11 w-full rounded-xl !bg-brand-primary-dark text-sm font-semibold !text-white shadow-lg shadow-brand-primary-dark/15 transition-all hover:!bg-brand-primary-hover">{busy ? "Opening preview…" : DEMO_MODE_ENABLED ? "Enter preview" : "Sign in"}<ArrowRight className="ml-1 size-4" /></Button>
               {error && <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-5 text-amber-900">{error}</p>}
             </form>
-            <p className="mt-10 text-center text-xs leading-5 text-slate-400">{DEMO_MODE_ENABLED ? "Demo preview only. No real authentication or operational connection." : "Authorized personnel only. Activity is monitored and secured."}</p>
           </div>
         </section>
       </div>

@@ -19,7 +19,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   if (!DEMO_MODE_ENABLED) {
-    return NextResponse.json({ error: "Demo preview is disabled." }, { status: 404 })
+    return NextResponse.json({ error: "preview is disabled." }, { status: 404 })
   }
 
   let body: unknown

@@ -34,7 +34,7 @@ The ML outputs are advisory. The existing project brief says current ML artifact
 
 ## Current limitations
 
-- Development runs in an explicit, visibly labeled demo preview by default. Set `NEXT_PUBLIC_AEROPULSE_DEMO_MODE=true` to enable the preview in other environments.
+- Development runs in an explicit, visibly labeled preview by default. Set `NEXT_PUBLIC_AEROPULSE_DEMO_MODE=true` to enable the preview in other environments.
 - Demo role selection only opens a sample interface; it is not authentication. The preview cookie is only for role-specific navigation and must not be used as a production security boundary.
 - Real sign-in is unavailable until a backend is connected; production without demo mode reports this and does not create a fake session.
 - Forgot-password is unavailable until the backend exposes recovery.
@@ -59,6 +59,6 @@ The ML outputs are advisory. The existing project brief says current ML artifact
 
 ## Running the current preview
 
-Run `npm run dev`, open `http://localhost:3000/login`, choose Headquarters or Squadron Leader, then select **Enter demo preview**. Development mode enables this preview automatically. For a production build, set `NEXT_PUBLIC_AEROPULSE_DEMO_MODE=true` only when intentionally serving the demo interface. The demo cookie and preview values are local development scaffolding, not an authentication system.
+Run `npm run dev`, open `http://localhost:3000/login`, choose Headquarters or Squadron Leader, then select **Enter preview**. Development mode enables this preview automatically. For a production build, set `NEXT_PUBLIC_AEROPULSE_DEMO_MODE=true` only when intentionally serving the demo interface. The demo cookie and preview values are local development scaffolding, not an authentication system.
 
 `npm run lint` and `npm run build` both pass. The role landing pages, logout, role mismatch redirect, and unauthenticated deep-link redirect were checked in the local browser.
