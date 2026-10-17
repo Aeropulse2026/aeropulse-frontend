@@ -1,5 +1,4 @@
 import { CardNav } from "@/components/card-nav";
-import { DemoSessionActions } from "@/components/layout/demo-session-actions";
 
 export default function HeadquarterLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +11,7 @@ export default function HeadquarterLayout({ children }: { children: React.ReactN
         menuColor="#0b1f33"
         buttonBgColor="#0b1f33"
         buttonTextColor="#ffffff"
+        sessionRole="headquarters"
         items={[
           {
             label: "Command",

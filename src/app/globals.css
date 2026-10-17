@@ -200,30 +200,6 @@
 .aircraft-carousel--squadron .aircraft-carousel-indicator { background: #cbd5e1; }
 .aircraft-carousel--squadron .aircraft-carousel-indicator.is-active { background: var(--aero-teal); box-shadow: 0 0 12px rgba(20, 123, 147, .26); }
 
-.squadron-session-actions {
-  min-height: 56px;
-  border: 1px solid rgba(101, 211, 225, .24);
-  border-radius: 16px;
-  background: linear-gradient(105deg, #0a2138, #12334f 68%, #0c2942);
-  padding: 8px 10px 8px 14px;
-  box-shadow: 0 12px 28px -22px rgba(0, 14, 29, .8), inset 0 1px rgba(255, 255, 255, .07);
-}
-.squadron-exit-preview {
-  border-color: rgba(161, 192, 211, .5) !important;
-  background: linear-gradient(145deg, #f7fbfe, #e5edf3) !important;
-  color: #102d47 !important;
-  box-shadow: 0 4px 12px rgba(0, 12, 25, .2);
-  transition: transform .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease !important;
-}
-.squadron-exit-preview:hover:not(:disabled) {
-  border-color: #8bd9e2 !important;
-  background: white !important;
-  box-shadow: 0 7px 16px rgba(0, 12, 25, .25);
-  transform: translateY(-1px);
-}
-.squadron-exit-preview:active:not(:disabled) { transform: translateY(1px) scale(.99); }
-.squadron-exit-preview:focus-visible { outline: 3px solid #76d7e2; outline-offset: 3px; }
-
 .squadron-fleet-page {
   color: var(--aero-ink);
   background-color: var(--aero-page);

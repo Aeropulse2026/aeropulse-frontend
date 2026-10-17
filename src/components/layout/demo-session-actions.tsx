@@ -1,15 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { LogOut } from "lucide-react"
+import { LogOut, RadioTower, ShieldCheck } from "lucide-react"
+import type { DemoRole } from "@/lib/auth/demo-session"
 
-import { Button } from "@/components/ui/button"
-
-export function DemoSessionActions({ role, appearance = "default" }: { role: string; appearance?: "default" | "squadron" }) {
+export function DemoSessionActions({ role }: { role: DemoRole }) {
   const router = useRouter()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
+  const [previewActive, setPreviewActive] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    void fetch("/api/demo-session", { method: "GET", cache: "no-store", credentials: "same-origin" })
+      .then(async (response) => {
+        if (!response.ok) return null
+        return response.json() as Promise<{ enabled?: boolean; role?: DemoRole | null }>
+      })
+      .then((session) => {
+        if (active) setPreviewActive(session?.enabled === true && session.role === role)
+      })
+      .catch(() => {
+        if (active) setPreviewActive(false)
+      })
+    return () => { active = false }
+  }, [role])
 
   async function signOut() {
     setBusy(true)
@@ -26,16 +42,22 @@ export function DemoSessionActions({ role, appearance = "default" }: { role: str
     }
   }
 
+  if (!previewActive) return null
+
+  const RoleIcon = role === "squadron-leader" ? RadioTower : ShieldCheck
+  const roleLabel = role === "squadron-leader" ? "Squadron Leader" : "Headquarters"
+
   return (
-    <div className={appearance === "squadron" ? "squadron-session-actions flex w-full items-center justify-between gap-3" : "flex items-center gap-3"}>
-      <span className={appearance === "squadron" ? "text-sm font-bold text-white" : "hidden text-xs font-semibold text-amber-800 sm:inline"}>
-        {role}
-      </span>
-      <Button type="button" variant="outline" size={appearance === "squadron" ? "default" : "sm"} disabled={busy} onClick={signOut} aria-label="End preview" className={appearance === "squadron" ? "squadron-exit-preview h-10 rounded-xl px-4 font-semibold" : undefined}>
-        <LogOut className="size-4" />
+    <div className="preview-menu-session">
+      <div className="preview-menu-role">
+        <span className="preview-menu-role-icon"><RoleIcon className="size-4" aria-hidden="true" /></span>
+        <span className="preview-menu-role-label">{roleLabel}</span>
+      </div>
+      <button type="button" disabled={busy} onClick={signOut} aria-label="Exit preview" aria-busy={busy} className="preview-exit-menu-button">
+        <LogOut className="size-4" aria-hidden="true" />
         {busy ? "Ending…" : "Exit preview"}
-      </Button>
-      {error && <span role="alert" className="sr-only">{error}</span>}
+      </button>
+      {error && <span role="alert" className="preview-session-error">{error}</span>}
     </div>
   )
 }

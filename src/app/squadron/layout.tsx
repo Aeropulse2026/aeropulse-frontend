@@ -1,5 +1,4 @@
 import { CardNav } from "@/components/card-nav"
-import { DemoSessionActions } from "@/components/layout/demo-session-actions"
 
 export default function SquadronLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +11,7 @@ export default function SquadronLayout({ children }: { children: React.ReactNode
         menuColor="#0b1f33"
         buttonBgColor="#0b1f33"
         buttonTextColor="#ffffff"
+        sessionRole="squadron-leader"
         items={[
           {
             label: "Command",
@@ -32,9 +32,6 @@ export default function SquadronLayout({ children }: { children: React.ReactNode
           },
         ]}
       />
-      <div className="mx-auto my-3 flex w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-        <DemoSessionActions role="Squadron Leader" appearance="squadron" />
-      </div>
       {children}
     </>
   )

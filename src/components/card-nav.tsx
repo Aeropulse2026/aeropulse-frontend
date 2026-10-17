@@ -4,6 +4,8 @@ import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ArrowUpRight, PlaneTakeoff, RadioTower, ShieldCheck } from "lucide-react";
+import type { DemoRole } from "@/lib/auth/demo-session";
+import { DemoSessionActions } from "@/components/layout/demo-session-actions";
 
 import "./card-nav.css";
 
@@ -26,6 +28,7 @@ type CardNavProps = {
   buttonBgColor?: string;
   buttonTextColor?: string;
   ease?: string;
+  sessionRole?: DemoRole;
 };
 
 export function CardNav({
@@ -38,19 +41,20 @@ export function CardNav({
   buttonBgColor = "#0b1f33",
   buttonTextColor = "#ffffff",
   ease = "power3.out",
+  sessionRole,
 }: CardNavProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
-  const calculateHeight = () => {
-    if (!navRef.current) return 260;
-    return window.matchMedia("(max-width: 768px)").matches ? 430 : 260;
-  };
-
   useLayoutEffect(() => {
     if (!navRef.current) return;
+    const calculateHeight = () => {
+      if (!navRef.current) return 260;
+      if (window.matchMedia("(max-width: 768px)").matches) return sessionRole ? 500 : 430;
+      return sessionRole ? 320 : 260;
+    };
     const timeline = gsap.timeline({ paused: true });
     gsap.set(navRef.current, { height: 60, overflow: "hidden" });
     gsap.set(cardsRef.current, { y: 50, opacity: 0 });
@@ -62,7 +66,7 @@ export function CardNav({
       timeline.kill();
       timelineRef.current = null;
     };
-  }, [ease, items]);
+  }, [ease, items, sessionRole]);
 
   function toggleMenu() {
     const timeline = timelineRef.current;
@@ -78,7 +82,7 @@ export function CardNav({
 
   return (
     <div className="card-nav-container">
-      <nav ref={navRef} className={`card-nav ${isOpen ? "open" : ""}`} style={{ backgroundColor: baseColor }}>
+      <nav ref={navRef} className={`card-nav ${isOpen ? "open" : ""} ${sessionRole ? "has-session" : ""}`} style={{ backgroundColor: baseColor }}>
         <div className="card-nav-top">
           <div className="card-nav-command">
             <button type="button" className={`hamburger-menu ${isOpen ? "open" : ""}`} onClick={toggleMenu} aria-label={isOpen ? "Close menu" : "Open menu"} aria-expanded={isOpen} style={{ color: menuColor }}>
@@ -98,6 +102,7 @@ export function CardNav({
             </div>
           ))}
         </div>
+        {sessionRole && <div className="card-nav-session" aria-hidden={!isOpen}><DemoSessionActions role={sessionRole} /></div>}
       </nav>
     </div>
   );

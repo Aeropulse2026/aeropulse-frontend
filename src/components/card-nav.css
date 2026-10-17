@@ -12,6 +12,19 @@
 .card-nav-cta-button { display: flex; align-items: center; height: 100%; padding: 0 16px; border-radius: 9px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .card-nav-content { position: absolute; inset: 60px 0 0; display: flex; align-items: stretch; gap: 12px; padding: 8px; visibility: hidden; pointer-events: none; }
 .card-nav.open .card-nav-content { visibility: visible; pointer-events: auto; }
+.card-nav.has-session .card-nav-content { bottom: 58px; }
+.card-nav-session { position: absolute; right: 8px; bottom: 8px; left: 8px; display: flex; min-height: 42px; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid rgba(11,31,51,.1); padding: 8px 4px 0; visibility: hidden; opacity: 0; pointer-events: none; transform: translateY(5px); transition: opacity .2s ease, transform .2s ease, visibility .2s ease; }
+.card-nav.open .card-nav-session { visibility: visible; opacity: 1; pointer-events: auto; transform: translateY(0); transition-delay: .14s; }
+.preview-menu-session { display: flex; min-width: 0; flex: 1; align-items: center; justify-content: space-between; gap: 12px; }
+.preview-menu-role { display: flex; min-width: 0; align-items: center; gap: 9px; color: #0b1f33; }
+.preview-menu-role-icon { display: flex; width: 30px; height: 30px; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid rgba(20,123,147,.18); border-radius: 9px; background: #e5f3f6; color: #116f86; }
+.preview-menu-role-label { overflow: hidden; font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.preview-exit-menu-button { display: inline-flex; min-height: 36px; flex: 0 0 auto; align-items: center; justify-content: center; gap: 7px; border: 1px solid #fecaca; border-radius: 10px; background: #fef2f2; padding: 0 12px; color: #dc2626; font-size: 12px; font-weight: 700; cursor: pointer; transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+.preview-exit-menu-button:hover:not(:disabled) { border-color: #fca5a5; background: #fee2e2; box-shadow: 0 4px 12px -8px rgba(220,38,38,.38); }
+.preview-exit-menu-button:active:not(:disabled) { transform: translateY(1px) scale(.985); }
+.preview-exit-menu-button:focus-visible { outline: 3px solid rgba(220,38,38,.3); outline-offset: 2px; }
+.preview-exit-menu-button:disabled { cursor: wait; opacity: .65; }
+.preview-session-error { position: absolute; right: 0; bottom: calc(100% + 5px); left: 0; border-radius: 8px; background: #fff1f2; padding: 5px 8px; color: #9f1239; font-size: 11px; }
 .nav-card { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; padding: 16px; border: 1px solid rgba(255,255,255,.22); border-radius: 13px; box-shadow: 0 10px 24px -18px rgba(11,31,51,.45); }
 .nav-card-mark { display: flex; align-items: center; gap: 6px; font-size: 9px; font-weight: 800; letter-spacing: .18em; opacity: .65; }
 .nav-card-label { font-size: 21px; font-weight: 600; letter-spacing: -.03em; }
@@ -28,4 +41,7 @@
   .card-nav-content { flex-direction: column; gap: 8px; }
   .nav-card { flex: 1 1 auto; min-height: 88px; }
   .nav-card-label { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .preview-exit-menu-button, .card-nav-session { transition-duration: 1ms; }
 }
