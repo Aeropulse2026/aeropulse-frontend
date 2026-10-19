@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowUpRight,
   Cloud,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 import { demoAirbases, getAirbaseSummary } from "@/lib/demo-data/headquarters";
 import type { AirbaseRecord } from "@/lib/demo-data/headquarters";
+import { getAirbaseIllustration } from "@/lib/airbase-illustrations";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,6 +47,9 @@ const stats = [
 export default function AirbaseAssetsPage() {
   const [selectedAirbase, setSelectedAirbase] =
     useState<AirbaseRecord | null>(null);
+  const selectedAirbaseIllustration = selectedAirbase
+    ? getAirbaseIllustration(selectedAirbase.code)
+    : undefined;
 
   return (
     <main className="min-h-screen bg-brand-background px-4 py-8 text-slate-950 sm:px-6 lg:px-12">
@@ -147,17 +152,22 @@ export default function AirbaseAssetsPage() {
             <div
               className={`relative isolate overflow-hidden bg-gradient-to-br ${selectedAirbase.accent} px-5 py-5 text-white sm:px-8 sm:py-6`}
             >
+              {selectedAirbaseIllustration && (
+                <Image
+                  src={selectedAirbaseIllustration}
+                  alt=""
+                  aria-hidden="true"
+                  fill
+                  sizes="(min-width: 768px) 700px, 100vw"
+                  className="object-cover opacity-65"
+                  priority
+                />
+              )}
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0b1f33]/65 via-[#0b1f33]/42 to-[#0b1f33]/32" />
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -right-10 -top-14 -z-10 size-52 rounded-full border border-white/10"
+                className="pointer-events-none absolute -right-10 -top-14 z-0 size-52 rounded-full border border-white/15"
               />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -right-5 bottom-0 -z-10 text-white/[0.07]"
-              >
-                <Plane className="size-44 -rotate-12 sm:size-52" strokeWidth={0.8} />
-              </div>
-
               <div className="relative z-10 flex items-start justify-between gap-4 pr-7">
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-white/70">
@@ -247,13 +257,13 @@ export default function AirbaseAssetsPage() {
             </div>
 
             {/* Compact footer */}
-            <DialogFooter className="flex flex-row items-center justify-between gap-3 border-t border-slate-200 bg-slate-50/90 px-4 py-3 sm:px-6">
+            <DialogFooter className="grid grid-cols-2 items-center gap-3 border-t border-slate-200 bg-slate-50/90 px-4 pt-3 pb-5 sm:px-6">
               <DialogClose
                 render={
                   <Button
                     type="button"
                     variant="outline"
-                    className="h-11 shrink-0 rounded-full border-slate-200 bg-white px-5 text-slate-700 hover:bg-slate-100"
+                    className="h-11 w-full min-w-0 justify-center gap-2 rounded-full border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 hover:bg-slate-100"
                   />
                 }
               >
@@ -263,10 +273,11 @@ export default function AirbaseAssetsPage() {
 
               <Link
                 href="/headquarter/squadrons"
-                className="inline-flex h-11 min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-[#123D69] px-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#0B1F33] sm:flex-none sm:px-6"
+                aria-label="Manage squadrons"
+                className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2 rounded-full bg-[#123D69] px-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#0B1F33] sm:px-4 sm:text-sm"
               >
                 <ArrowUpRight className="size-4 shrink-0" />
-                <span className="truncate">Open squadron management</span>
+                <span className="truncate">Manage</span>
               </Link>
             </DialogFooter>
           </DialogContent>
@@ -284,6 +295,7 @@ function AirbaseCard({
   airbase: AirbaseRecord;
   onSelect: (airbase: AirbaseRecord) => void;
 }) {
+  const illustration = getAirbaseIllustration(airbase.code);
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLDivElement>
   ) => {
@@ -304,9 +316,20 @@ function AirbaseCard({
       <div
         className={`relative h-28 overflow-hidden bg-gradient-to-br ${airbase.accent} p-5 text-white`}
       >
-        <div className="absolute -right-6 -top-12 size-40 rounded-full border border-white/15" />
+        {illustration && (
+          <Image
+            src={illustration}
+            alt=""
+            aria-hidden="true"
+            fill
+            sizes="(min-width: 1280px) 360px, (min-width: 768px) 50vw, 100vw"
+            className="object-cover opacity-55 transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0b1f33]/75 via-[#0b1f33]/45 to-[#0b1f33]/30" />
+        <div className="absolute -right-6 -top-12 z-0 size-40 rounded-full border border-white/20" />
 
-        <div className="relative flex items-start justify-between gap-3">
+        <div className="relative z-10 flex items-start justify-between gap-3">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/65">
               {airbase.code}

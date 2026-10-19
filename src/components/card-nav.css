@@ -1,6 +1,7 @@
 .card-nav-container { width: min(100%, 1440px); margin: 14px auto 18px; padding: 0 clamp(16px, 3vw, 48px); position: relative; z-index: 50; }
 .card-nav-container--content-sized { margin-top: 10px; margin-bottom: 14px; }
 .card-nav { height: 60px; position: relative; overflow: hidden; border: 1px solid color-mix(in srgb, var(--aero-border) 82%, white); border-radius: 17px; box-shadow: 0 16px 34px -24px rgba(11,31,51,.42), 0 3px 10px rgba(11,31,51,.045); will-change: height; backdrop-filter: blur(16px); }
+.card-nav::before { content: ""; position: absolute; z-index: 4; inset: 0 0 auto; height: 2px; background: linear-gradient(90deg, #e99535 0 33%, #fff 33% 66%, #21805f 66% 100%); opacity: .9; pointer-events: none; }
 .card-nav-top { position: absolute; inset: 0 0 auto; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; z-index: 2; }
 .card-nav-command { display: flex; align-items: center; gap: 12px; }
 .hamburger-menu { width: 30px; height: 44px; display: flex; flex-direction: column; justify-content: center; gap: 6px; border: 0; padding: 0; background: transparent; cursor: pointer; }
@@ -37,7 +38,7 @@
 .preview-exit-menu-button:focus-visible { outline: 3px solid rgba(220,38,38,.3); outline-offset: 2px; }
 .preview-exit-menu-button:disabled { cursor: wait; opacity: .65; }
 .preview-session-error { position: absolute; right: 0; bottom: calc(100% + 5px); left: 0; border-radius: 8px; background: #fff1f2; padding: 5px 8px; color: #9f1239; font-size: 11px; }
-.nav-card { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; padding: 16px; border: 1px solid rgba(255,255,255,.22); border-radius: 13px; box-shadow: 0 10px 24px -18px rgba(11,31,51,.45); }
+.nav-card { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; padding: 16px; border: 1px solid rgba(255,255,255,.22); border-radius: 13px; background-image: radial-gradient(ellipse at 100% 0%, rgba(33,128,95,.075), transparent 12rem), radial-gradient(ellipse at 0% 100%, rgba(233,149,53,.065), transparent 14rem); box-shadow: 0 10px 24px -18px rgba(11,31,51,.45); }
 .nav-card-mark { display: flex; align-items: center; gap: 6px; font-size: 9px; font-weight: 800; letter-spacing: .18em; opacity: .65; }
 .nav-card-label { font-size: 21px; font-weight: 600; letter-spacing: -.03em; }
 .nav-card-links { display: flex; flex-direction: column; gap: 7px; margin-top: auto; }

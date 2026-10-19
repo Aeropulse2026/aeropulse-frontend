@@ -3,9 +3,11 @@
 
 import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { AlertTriangle, ArrowUpRight, ChevronLeft, ChevronRight, Clock3, Plane, ShieldCheck, Wrench } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import type { AircraftRecord } from "@/lib/demo-data/aircraft";
+import { getAircraftIllustration } from "@/lib/aircraft-illustrations";
 
 type Props = { cards: AircraftRecord[]; ariaLabel?: string; detailPrefix: string; appearance?: "standard" | "squadron"; onSelectAircraft?: (id: string) => void };
 
@@ -34,6 +36,7 @@ export function SkewedCardCarousel({ cards, ariaLabel = "Aircraft carousel", det
         {[-1, 0, 1].map((offset) => {
           const index = (activeIndex + offset + cards.length) % cards.length, card = cards[index], selected = offset === 0;
           const color = card.status === "Operational" ? "var(--aero-success)" : card.status === "Maintenance" ? "var(--aero-warning)" : "var(--aero-disabled)";
+          const illustration = getAircraftIllustration(card.model);
           const stateClass = selected
             ? isSquadron ? "aircraft-carousel-card--active z-10 scale-100" : "z-10 scale-100 border-2 border-brand-secondary"
             : isSquadron ? "aircraft-carousel-card--side scale-[.92] opacity-70 md:flex" : "hidden scale-[.91] opacity-75 md:flex";
@@ -42,7 +45,7 @@ export function SkewedCardCarousel({ cards, ariaLabel = "Aircraft carousel", det
             <div className="h-1.5" style={{background:color}} />
             <div className="flex flex-1 flex-col p-5 sm:p-7">
               <div className="flex justify-between gap-4"><div><p className="font-mono text-xs font-bold tracking-widest text-slate-500">{card.id} / {card.squadron}</p><h3 className="mt-2 text-2xl font-bold text-brand-primary-dark">{card.name}</h3><p className="mt-1 text-sm text-brand-muted">{card.model} · {card.role}</p></div><Plane className="size-6 shrink-0" style={{color}} /></div>
-              <div className={`relative my-5 flex h-44 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#e6f5f8] via-white to-[#d9e2ec] ${isSquadron ? "aircraft-illustration" : ""}`}><div className="absolute size-36 rounded-full border border-dashed border-brand-secondary/20"/><div className="absolute size-24 rounded-full border border-dashed border-brand-secondary/25"/><div className="absolute h-px w-4/5 rotate-[-25deg] bg-brand-secondary/20"/><Plane className="relative z-10 size-20 -rotate-12" strokeWidth={1.25} style={{color}}/><span className="absolute bottom-3 right-4 font-mono text-[10px] tracking-widest text-slate-400">AIRFRAME · {card.id}</span></div>
+              <div className={`relative my-5 flex h-44 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#e6f5f8] via-white to-[#d9e2ec] ${isSquadron ? "aircraft-illustration" : ""}`}><div className="absolute size-36 rounded-full border border-dashed border-brand-secondary/20"/><div className="absolute size-24 rounded-full border border-dashed border-brand-secondary/25"/><div className="absolute h-px w-4/5 rotate-[-25deg] bg-brand-secondary/20"/>{illustration ? <Image src={illustration} alt="" aria-hidden="true" width={1536} height={1024} sizes="(min-width: 1024px) 420px, 80vw" className="relative z-10 h-full w-full scale-[1.12] object-contain drop-shadow-[0_10px_12px_rgba(19,52,76,0.2)]" priority={selected}/> : <Plane className="relative z-10 size-20 -rotate-12" strokeWidth={1.25} style={{color}}/>}<span className="absolute bottom-3 right-4 z-20 font-mono text-[10px] tracking-widest text-slate-400">AIRFRAME · {card.id}</span></div>
               <p className="text-sm leading-6 text-slate-600">{card.description}</p>
               <div className={`${isSquadron ? `aircraft-status aircraft-status--${card.status.toLowerCase()}` : "bg-slate-50"} mt-4 flex items-center justify-between rounded-xl px-3 py-2.5`}><span className="inline-flex items-center gap-2 text-sm font-semibold" style={{color}}>{card.status === "Operational" ? <ShieldCheck className="size-4"/> : <AlertTriangle className="size-4"/>}{card.status}</span><span className="text-xs text-brand-muted">{card.base}</span></div>
               <div className="mt-4 grid grid-cols-2 gap-3"><div className="rounded-xl bg-slate-50 p-3"><p className="text-[11px] uppercase tracking-wider text-brand-muted">Readiness</p><p className="mt-1 text-2xl font-bold text-brand-primary-dark">{card.readiness}%</p></div><div className="rounded-xl bg-slate-50 p-3"><p className="text-[11px] uppercase tracking-wider text-brand-muted">Flight hours</p><p className="mt-1 flex items-center gap-1 text-2xl font-bold text-brand-primary-dark"><Clock3 className="size-4 text-brand-secondary"/>{card.hours}h</p></div></div>

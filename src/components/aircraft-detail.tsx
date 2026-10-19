@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Plane } from "lucide-react";
+import { getAircraftIllustration } from "@/lib/aircraft-illustrations";
 import { demoAircraft } from "@/lib/demo-data/aircraft";
 import {
   getSquadronAircraftById,
@@ -42,6 +44,7 @@ export function AircraftDetail({ backHref }: { backHref: string }) {
     ["Last scheduled maintenance", aircraft.lastMaintenance],
     ["Next scheduled maintenance", aircraft.nextMaintenance],
   ];
+  const illustration = getAircraftIllustration(aircraft.model);
 
   return (
     <main className="min-h-screen bg-brand-background px-5 py-8 sm:px-8">
@@ -64,7 +67,13 @@ export function AircraftDetail({ backHref }: { backHref: string }) {
                 {aircraft.description}
               </p>
             )}
-            <Plane className="mt-8 size-24 text-cyan-200" strokeWidth={1} />
+            {illustration ? (
+              <div className="mt-6 flex h-48 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 px-4 sm:h-56">
+                <Image src={illustration} alt={`Illustration representing the ${aircraft.model} aircraft type`} width={1536} height={1024} sizes="(min-width: 1024px) 672px, 90vw" className="h-full w-full max-w-2xl object-contain drop-shadow-[0_10px_12px_rgba(0,0,0,0.22)]" priority />
+              </div>
+            ) : (
+              <Plane className="mt-8 size-24 text-cyan-200" strokeWidth={1} />
+            )}
           </div>
 
           <div className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3">

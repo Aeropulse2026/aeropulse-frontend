@@ -25,6 +25,8 @@
   --aero-amber: #e6b34c;
   --aero-amber-ink: #84570b;
   --aero-amber-soft: #fff5d9;
+  --aero-saffron: #e99535;
+  --aero-india-green: #21805f;
   --aero-command-night: #071a2d;
   --aero-command-slate: #0c2742;
   --aero-command-panel: #102f4b;
@@ -384,7 +386,16 @@ body {
 }
 
 main[class~="bg-brand-background"] {
-  background-image: radial-gradient(ellipse at 12% 0%, rgba(20, 123, 147, .055), transparent 32rem),
+  background-image: radial-gradient(ellipse at 0% 100%, rgba(33, 128, 95, .045), transparent 30rem),
+    radial-gradient(ellipse at 100% 0%, rgba(233, 149, 53, .052), transparent 30rem),
+    radial-gradient(ellipse at 12% 0%, rgba(20, 123, 147, .05), transparent 32rem),
+    linear-gradient(180deg, rgba(255, 255, 255, .16), transparent 24rem);
+}
+
+.squadron-fleet-page {
+  background-image: radial-gradient(ellipse at 0% 100%, rgba(33, 128, 95, .045), transparent 30rem),
+    radial-gradient(ellipse at 100% 0%, rgba(233, 149, 53, .052), transparent 30rem),
+    radial-gradient(ellipse at 12% 0%, rgba(20, 123, 147, .05), transparent 32rem),
     linear-gradient(180deg, rgba(255, 255, 255, .16), transparent 24rem);
 }
 
@@ -397,21 +408,53 @@ main > div > header {
   animation: aero-rise-in var(--aero-motion-enter) var(--aero-ease-enter) both;
 }
 
+main header > p:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+}
+
+main header > p:first-child::after {
+  width: 30px;
+  height: 2px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--aero-saffron) 0 33%, #fff 33% 66%, var(--aero-india-green) 66% 100%);
+  box-shadow: 0 0 0 1px rgba(11, 31, 51, .045);
+  content: "";
+}
+
 main article[class*="rounded-2xl"][class*="border"] {
   border-color: var(--aero-border);
   box-shadow: var(--aero-shadow-card);
   transition: border-color var(--aero-motion-control) var(--aero-ease-standard), box-shadow var(--aero-motion-card) var(--aero-ease-standard), transform var(--aero-motion-card) var(--aero-ease-standard);
 }
 
-main article[class*="rounded-2xl"][class*="border"]:hover {
+/* Give content panels a shared layered surface. Carousel cards keep their own art direction. */
+main :is(article, section, details, div)[class*="rounded-2xl"][class*="border"][class*="bg-white"]:not(.aircraft-carousel-card),
+main section[class*="rounded-3xl"][class*="border"][class*="bg-white"] {
+  background-image: radial-gradient(ellipse at 100% 0%, rgba(33, 128, 95, .045), transparent 13rem),
+    radial-gradient(ellipse at 0% 100%, rgba(233, 149, 53, .035), transparent 14rem),
+    radial-gradient(ellipse at 100% 0%, rgba(20, 123, 147, .055), transparent 15rem),
+    linear-gradient(145deg, rgba(255, 255, 255, .99), rgba(248, 252, 254, .97));
+  box-shadow: inset 0 2px 0 rgba(20, 123, 147, .13), var(--aero-shadow-card);
+}
+
+main article[class*="rounded-2xl"][class*="border"]:not(.aircraft-carousel-card):hover {
   border-color: color-mix(in srgb, var(--aero-teal) 25%, var(--aero-border));
   box-shadow: var(--aero-shadow-hover);
+  transform: translateY(-1px);
 }
 
 main section[class*="rounded-3xl"][class*="border"][class*="bg-white"] {
   border-color: color-mix(in srgb, var(--aero-border) 90%, white);
-  background-image: linear-gradient(145deg, rgba(255, 255, 255, .98), rgba(250, 253, 255, .98));
-  box-shadow: var(--aero-shadow-card);
+}
+
+main :is(article, section, details, div) [class*="rounded-xl"][class*="bg-brand-background"] {
+  border: 1px solid rgba(20, 123, 147, .09);
+  background-image: linear-gradient(145deg, rgba(255, 255, 255, .76), rgba(231, 240, 247, .66)),
+    linear-gradient(110deg, rgba(233, 149, 53, .025), transparent 45%, rgba(33, 128, 95, .03));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .78);
 }
 
 main a.group[class*="rounded-"] {
@@ -422,6 +465,7 @@ main a.group[class*="rounded-"] {
 main a.group[class*="rounded-"]:hover {
   border-color: color-mix(in srgb, var(--aero-teal) 20%, var(--aero-border));
   box-shadow: var(--aero-shadow-hover);
+  background-image: linear-gradient(110deg, rgba(233, 149, 53, .035), transparent 43%, rgba(33, 128, 95, .045));
 }
 
 main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
@@ -442,7 +486,7 @@ main :is(button, a, [role="button"]):focus-visible {
 }
 
 main table thead {
-  background: #f2f6f9;
+  background: linear-gradient(100deg, rgba(233, 149, 53, .045), #f2f6f9 30%, #f2f6f9 70%, rgba(33, 128, 95, .045));
 }
 
 main table tbody tr {
@@ -450,7 +494,8 @@ main table tbody tr {
 }
 
 main table tbody tr:hover {
-  background-color: #f2f8fa;
+  background-color: #f5f9fa;
+  background-image: linear-gradient(100deg, rgba(233, 149, 53, .025), transparent 38%, rgba(33, 128, 95, .03));
 }
 
 main :is(b, strong, [class*="text-2xl"], [class*="text-3xl"]) { font-variant-numeric: tabular-nums; }
