@@ -59,7 +59,6 @@ export default function LoginPage() {
             </div>
             <h1 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight xl:text-5xl">Mission control, connected.</h1>
             <p className="mt-5 max-w-lg text-base leading-7 text-slate-200/85">Secure access to the VAYUNETRA command network. Stay informed, coordinate with precision, and keep every mission moving forward.</p>
-            <div className="mt-10 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.16em] text-brand-secondary-light/75"><span className="size-2 rounded-full bg-amber-400" />Backend connection not configured</div>
           </div>
         </section>
 
